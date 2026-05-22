@@ -1,0 +1,177 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Huflit Alumni Meeting</title>
+    <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f0f4ff;
+                color: #333;
+            }
+
+            .container {
+                max-width: 860px;
+                margin: 40px auto;
+                background: #fff;
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            }
+
+            /* ẢNH BANNER */
+            .banner img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            /* NỘI DUNG */
+            .content {
+                padding: 32px 40px;
+            }
+
+            .intro {
+                font-size: 15px;
+                line-height: 1.8;
+                color: #444;
+                border-left: 4px solid #1a5bbf;
+                padding-left: 16px;
+                margin-bottom: 28px;
+            }
+
+            /* THÔNG TIN */
+            .info-box {
+                background: #eef3ff;
+                border-radius: 12px;
+                padding: 24px 28px;
+                margin-bottom: 28px;
+            }
+
+                .info-box h3 {
+                    color: #1a5bbf;
+                    margin-bottom: 16px;
+                    font-size: 17px;
+                }
+
+            .info-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 12px;
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+                .info-item .icon {
+                    font-size: 20px;
+                    min-width: 28px;
+                }
+
+            /* MỤC TIÊU */
+            .goals h3 {
+                color: #1a5bbf;
+                margin-bottom: 16px;
+                font-size: 17px;
+            }
+
+            .goals ul {
+                list-style: none;
+                padding: 0;
+            }
+
+                .goals ul li {
+                    padding: 10px 0;
+                    border-bottom: 1px solid #eee;
+                    font-size: 15px;
+                    line-height: 1.6;
+                    padding-left: 24px;
+                    position: relative;
+                }
+
+                    .goals ul li::before {
+                        content: "✅";
+                        position: absolute;
+                        left: 0;
+                    }
+
+            /* NÚT ĐĂNG KÝ */
+            .cta {
+                text-align: center;
+                margin-top: 32px;
+            }
+
+                .cta a {
+                    display: inline-block;
+                    background: #f5a623;
+                    color: #fff;
+                    font-size: 18px;
+                    font-weight: bold;
+                    padding: 14px 48px;
+                    border-radius: 50px;
+                    text-decoration: none;
+                    letter-spacing: 1px;
+                    transition: background 0.2s;
+                }
+
+                    .cta a:hover {
+                        background: #d4891a;
+                    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="banner">
+            <img src="~/images/HOMEWORK.png"
+                 asp-append-version="true"
+                 alt="Thư mời họp mặt Cựu sinh viên HUFLIT" />
+        </div>
+
+        <div class="content">
+
+            <div class="intro">
+                Kính gửi: Quý anh/chị Cựu sinh viên trường Đại học Ngoại ngữ – Tin học TP.HCM (HUFLIT),<br />
+                Ban liên lạc Cựu sinh viên trân trọng kính mời anh/chị đến tham dự
+                <strong>"Buổi họp mặt Cựu sinh viên HUFLIT"</strong>.
+            </div>
+
+            <div class="info-box">
+                <h3> Thông tin chi tiết về chương trình</h3>
+                <div class="info-item">
+                    <span class="icon"></span>
+                    <span><strong>Thời gian:</strong> 08:30 – 12:00, Chủ Nhật, ngày 31 tháng 5 năm 2026</span>
+                </div>
+                <div class="info-item">
+                    <span class="icon"></span>
+                    <span><strong>Địa điểm:</strong> Hội trường Lầu 6 – Cơ sở Sư Vạn Hạnh, Trường Đại học HUFLIT</span>
+                </div>
+            </div>
+
+   
+            <div class="goals">
+                <h3> Mục tiêu chương trình</h3>
+                <ul>
+                    <li>Ôn lại những kỷ niệm thanh xuân đáng nhớ dưới mái trường HUFLIT.</li>
+                    <li>Gặp gỡ, giao lưu và mở rộng mạng lưới kết nối (networking) giữa các cựu sinh viên nhiều thế hệ.</li>
+                    <li>Lắng nghe chia sẻ và đóng góp ý kiến để xây dựng cộng đồng cựu sinh viên HUFLIT ngày càng vững mạnh.</li>
+                </ul>
+            </div>
+
+            
+            <div class="cta">
+                <a asp-action="Form">ĐĂNG KÝ NGAY</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

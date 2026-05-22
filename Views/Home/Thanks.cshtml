@@ -1,0 +1,110 @@
+﻿@model HuflitAlumniMeeting.Models.Guests
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xác nhận thành công - HUFLIT</title>
+    <style>
+            /* Đồng bộ nền và căn giữa giống form đăng ký */
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f0f4f8;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            /* Khung hiển thị thông báo */
+            .card {
+                background-color: #ffffff;
+                padding: 40px 30px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+                width: 100%;
+                max-width: 500px;
+                text-align: center; /* Căn giữa toàn bộ nội dung */
+            }
+
+            /* Biểu tượng cảm xúc */
+            .icon {
+                font-size: 56px;
+                margin-bottom: 15px;
+            }
+
+            /* Tiêu đề cảm ơn */
+            .card h1 {
+                color: #1a365d;
+                font-size: 26px;
+                margin-top: 0;
+                margin-bottom: 15px;
+            }
+
+            /* Lời nhắn */
+            .message {
+                font-size: 16px;
+                color: #4a5568;
+                line-height: 1.6;
+                margin-bottom: 30px;
+            }
+
+            /* Nút xem danh sách */
+            .btn-link {
+                display: inline-block;
+                padding: 12px 24px;
+                background-color: #f5a623;
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 15px;
+                transition: background-color 0.3s ease, transform 0.1s ease;
+            }
+
+                .btn-link:hover {
+                    background-color: #2b6cb0;
+                }
+
+                .btn-link:active {
+                    transform: translateY(1px);
+                }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="icon">
+            @if (Model?.WillAttend == true)
+            {
+                <text>🎉</text>
+            }
+            else
+            {
+                <text>💌</text>
+            }
+        </div>
+
+        <h1>Cảm ơn, @Model?.Name!</h1>
+
+        <div class="message">
+            @if (Model?.WillAttend == true)
+            {
+                <p>Thật tuyệt vời vì bạn sẽ đến tham dự.<br />Hẹn gặp bạn tại buổi họp mặt Cựu sinh viên HUFLIT nhé!</p>
+            }
+            else
+            {
+                <p>Rất tiếc vì bạn không thể tham gia lần này.<br />Cảm ơn bạn đã phản hồi và chúc bạn nhiều sức khỏe!</p>
+            }
+        </div>
+
+        <a asp-action="ListResponses" class="btn-link">Xem danh sách đăng ký</a>
+    </div>
+
+</body>
+</html>

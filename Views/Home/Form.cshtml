@@ -1,0 +1,242 @@
+﻿@model HuflitAlumniMeeting.Models.Guests
+@{
+    Layout = null;
+
+    // K1 nhập học 1995
+    int namDauTien = 1995;
+
+    // Tính năm kết thúc tự động dựa trên thời gian thực
+    int namHienTai = DateTime.Now.Year;
+    int thangHienTai = DateTime.Now.Month;
+
+    // Mặc định lùi 4 năm
+    int namKetThuc = namHienTai - 4;
+
+    // Nếu chưa tới đợt xét tốt nghiệp sớm (tháng 3) thì lùi lại 1 khóa nữa
+    if (thangHienTai < 3)
+    {
+        namKetThuc -= 1;
+    }
+
+    int tongSoKhoa = namKetThuc - namDauTien + 1;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký tham dự HUFLIT</title>
+    <style>
+            /* Đặt nền và căn giữa form trên toàn màn hình */
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f0f4f8;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            /* Định dạng khung chứa form (Card) */
+            .form-container {
+                background-color: #ffffff;
+                padding: 40px 30px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+                width: 100%;
+                max-width: 450px;
+            }
+
+                .form-container h2 {
+                    text-align: center;
+                    color: #1a365d;
+                    margin-top: 0;
+                    margin-bottom: 25px;
+                    font-size: 24px;
+                }
+
+            /* Khoảng cách giữa các ô nhập liệu */
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            /* Định dạng nhãn (Label) */
+            label.main-label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: #4a5568;
+                font-size: 14px;
+            }
+
+            /* Định dạng ô nhập liệu (Input & Select) */
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            select {
+                width: 100%;
+                padding: 12px 15px;
+                border: 1.5px solid #cbd5e0;
+                border-radius: 8px;
+                font-size: 15px;
+                color: #2d3748;
+                background-color: #fff;
+                box-sizing: border-box;
+                transition: all 0.3s ease;
+            }
+
+                /* Hiệu ứng khi click vào ô nhập liệu (Focus) */
+                input:focus,
+                select:focus {
+                    border-color: #3182ce;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+                }
+
+            /* --- CSS NÂNG CẤP CHO NÚT RADIO ĐỂ NỔI BẬT --- */
+            .radio-group {
+                display: flex;
+                gap: 12px;
+            }
+
+            .radio-item {
+                flex: 1;
+            }
+
+                /* Ẩn input radio mặc định đi */
+                .radio-item input[type="radio"] {
+                    position: absolute;
+                    opacity: 0;
+                    pointer-events: none;
+                }
+
+            /* Định dạng khung chữ nhật thay thế cho nút radio */
+            .radio-label {
+                display: block;
+                border: 2px solid #cbd5e0;
+                border-radius: 8px;
+                padding: 12px 5px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 14px;
+                color: #4a5568;
+            }
+
+            /* KHI CHỌN "CÓ" (value="true") -> Xanh lá */
+            .radio-item input[type="radio"][value="true"]:checked + .radio-label {
+                border-color: #38a169;
+                background-color: #f0fff4;
+                color: #22543d;
+                font-weight: bold;
+                box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.25); /* Viền phát sáng xanh lá */
+            }
+
+            /* KHI CHỌN "KHÔNG" (value="false") -> Đỏ */
+            .radio-item input[type="radio"][value="false"]:checked + .radio-label {
+                border-color: #e53e3e;
+                background-color: #fff5f5;
+                color: #742a2a;
+                font-weight: bold;
+                box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.25); /* Viền phát sáng đỏ */
+            }
+           
+            /* Định dạng nút bấm (Button) */
+            button[type="submit"] {
+                width: 100%;
+                padding: 14px;
+                background-color: #d4891a;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                margin-top: 15px;
+                transition: background-color 0.3s ease, transform 0.1s ease;
+            }
+
+                button[type="submit"]:hover {
+                    background-color: #b37316;
+                }
+
+                button[type="submit"]:active {
+                    transform: translateY(1px);
+                }
+
+            /* Định dạng dòng thông báo lỗi (Validation) */
+            span[data-valmsg-replace="true"] {
+                color: #e53e3e;
+                font-size: 13px;
+                display: block;
+                margin-top: 6px;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Đăng Ký Tham Dự</h2>
+        <form asp-action="RsvpForm" method="post">
+
+            <div class="form-group">
+                <label class="main-label" asp-for="Name">Họ tên:</label>
+                <input asp-for="Name" type="text" placeholder="Nhập họ và tên..." />
+                <span asp-validation-for="Name"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="main-label" asp-for="Email">Email:</label>
+                <input asp-for="Email" type="email" placeholder="example@email.com" />
+                <span asp-validation-for="Email"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="main-label" asp-for="Phone">Số điện thoại:</label>
+                <input asp-for="Phone" type="tel" placeholder="09xxxxxxxxx" />
+                <span asp-validation-for="Phone"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="main-label" asp-for="courses">Khoá học:</label>
+                <select asp-for="courses">
+                    <option value="">-- Chọn khoá học --</option>
+                    @for (int i = 1; i <= tongSoKhoa; i++)
+                    {
+                        int nam = namDauTien + i - 1;
+                        <option value="@i">K@(i)</option>
+                    }
+                </select>
+                <span asp-validation-for="courses"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="main-label">Bạn có tham dự không?</label>
+                <div class="radio-group">
+
+                    <div class="radio-item">
+                        <input type="radio" asp-for="WillAttend" value="true" id="attend-yes" />
+                        <label class="radio-label" for="attend-yes"> Có, tôi sẽ tham dự</label>
+                    </div>
+
+                    <div class="radio-item">
+                        <input type="radio" asp-for="WillAttend" value="false" id="attend-no" />
+                        <label class="radio-label" for="attend-no"> Không thể đến</label>
+                    </div>
+
+                </div>
+                <span asp-validation-for="WillAttend"></span>
+            </div>
+
+            <button type="submit">XÁC NHẬN ĐĂNG KÝ</button>
+
+        </form>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+﻿@model IEnumerable<HuflitAlumniMeeting.Models.Guests>
+@{
+    Layout = null;
+
+    // Lọc danh sách tham gia
+    var attendees = Model?.Where(r => r.WillAttend == true) ?? Enumerable.Empty<HuflitAlumniMeeting.Models.Guests>();
+
+    // Lấy các Khóa học hiện có (ép kiểu (int) để triệt tiêu lỗi Nullable)
+    var availableCourses = attendees
+        .Where(a => a.courses != null)
+        .Select(a => a.courses)
+        .Distinct()
+        .OrderBy(c => c);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh sách tham dự - HUFLIT</title>
+    <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, sans-serif;
+                background: #f0f4f8;
+                margin: 0;
+                padding: 40px 20px;
+                display: flex;
+                justify-content: center;
+            }
+
+            .table-container {
+                background: #fff;
+                padding: 30px 40px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+                width: 100%;
+                max-width: 800px;
+            }
+
+                .table-container h2 {
+                    text-align: center;
+                    color: #1a365d;
+                    margin: 0 0 25px 0;
+                    font-size: 24px;
+                }
+
+            /* Bộ lọc */
+            .filter-section {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                margin-bottom: 15px;
+                gap: 10px;
+            }
+
+                .filter-section label {
+                    font-weight: 600;
+                    color: #4a5568;
+                    font-size: 15px;
+                }
+
+                .filter-section select {
+                    padding: 8px 12px;
+                    border: 1px solid #cbd5e0;
+                    border-radius: 6px;
+                    color: #2d3748;
+                    outline: none;
+                    cursor: pointer;
+                }
+
+                    .filter-section select:focus {
+                        border-color: #3182ce;
+                    }
+
+            /* Bảng */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+                margin-bottom: 25px;
+            }
+
+            thead {
+                background: #f5a623;
+                color: #fff;
+            }
+
+            th, td {
+                padding: 14px 16px;
+                text-align: left;
+            }
+
+            th {
+                font-weight: 600;
+                font-size: 15px;
+            }
+
+            tbody tr {
+                border-bottom: 1px solid #e2e8f0;
+                color: #2d3748;
+                font-size: 14.5px;
+                transition: background 0.2s;
+            }
+
+                tbody tr:hover {
+                    background: #ebf8ff;
+                }
+
+                tbody tr:last-child {
+                    border-bottom: none;
+                }
+
+            /* Trạng thái trống & Nút bấm */
+            .empty-state {
+                text-align: center;
+                color: #718096;
+                padding: 30px;
+                font-style: italic;
+                background: #f7fafc;
+                border-radius: 8px;
+                border: 1px dashed #cbd5e0;
+            }
+
+            .btn-back {
+                display: inline-block;
+                padding: 10px 20px;
+                background: #e2e8f0;
+                color: #4a5568;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 14px;
+                transition: 0.3s;
+            }
+
+                .btn-back:hover {
+                    background: #cbd5e0;
+                    color: #1a202c;
+                }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <h2>📋 Danh sách cựu sinh viên tham dự</h2>
+
+        @if (!attendees.Any())
+        {
+            <div class="empty-state">Hiện tại chưa có khách nào xác nhận tham dự.</div>
+        }
+        else
+        {
+            <div class="filter-section">
+                <label for="courseFilter">Lọc theo khóa:</label>
+                <select id="courseFilter" onchange="filterTable()">
+                    <option value="all">-- Tất cả các khóa --</option>
+                    @foreach (var c in availableCourses)
+                    {
+                        <option value="@c">Khóa K@(c)</option>
+                    }
+                </select>
+            </div>
+
+            <table>
+                <thead>
+                    <tr><th>Họ tên</th><th>Email</th><th>Số điện thoại</th><th>Khóa</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in attendees)
+                    {
+                        <tr class="guest-row" data-course="@r.courses">
+                            <td>@r.Name</td>
+                            <td>@r.Email</td>
+                            <td>@r.Phone</td>
+                            <td>K@(r.courses)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <script>
+            function filterTable() {
+                const selected = document.getElementById("courseFilter").value;
+                document.querySelectorAll(".guest-row").forEach(row => {
+                    row.style.display = (selected === "all" || row.dataset.course === selected) ? "" : "none";
+                });
+            }
+    </script>
+</body>
+</html>
