@@ -3,7 +3,7 @@ import { formatDate } from '../lib/timeline.js'
 import { uid } from '../lib/id.js'
 
 export default function SubtaskCard({
-  item, index, total, expanded, onToggleExpand,
+  item, index, total, expanded, onToggleExpand, maxWeight = 100,
   onUpdate, onDelete, onMove, onToggleDone
 }) {
   const [linkLabel, setLinkLabel] = useState('')
@@ -43,7 +43,9 @@ export default function SubtaskCard({
             <span className={`font-medium ${item.done ? 'line-through text-muted' : ''}`}>
               {item.title || 'Untitled'}
             </span>
-            <span className="text-xs text-muted">{item.weight}%</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-accent/15 text-accent border border-accent/30">
+              {item.weight}%
+            </span>
           </div>
           <div className="text-xs text-muted mt-0.5">
             {formatDate(item.startDate)} → {formatDate(item.endDate)} ({item.durationDays.toFixed(1)}d)
@@ -65,9 +67,12 @@ export default function SubtaskCard({
               <input className="input" value={item.title} onChange={(e) => patch({ title: e.target.value })} />
             </div>
             <div>
-              <label className="label">Weight (%)</label>
-              <input className="input" type="number" min="0" step="1" value={item.weight}
-                     onChange={(e) => patch({ weight: Number(e.target.value) || 0 })} />
+              <label className="label">Weight (%) — tối đa {maxWeight}</label>
+              <input className="input" type="number" min="0" max={maxWeight} step="1" value={item.weight}
+                     onChange={(e) => {
+                       const v = Math.min(maxWeight, Math.max(0, Number(e.target.value) || 0))
+                       patch({ weight: v })
+                     }} />
             </div>
           </div>
 

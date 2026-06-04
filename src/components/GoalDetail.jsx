@@ -13,12 +13,16 @@ export default function GoalDetail({ goal, store, onBack }) {
 
   const timeline = useMemo(() => computeTimeline(goal), [goal])
   const progress = weightedProgress(goal.subtasks)
+  const totalWeight = goal.subtasks.reduce((s, x) => s + (x.weight || 0), 0)
+  const remaining = Math.max(0, 100 - totalWeight)
 
   const addSubtask = (e) => {
     e.preventDefault()
     if (!newTitle.trim()) return
-    store.addSubtask(goal.id, { title: newTitle, weight: newWeight })
-    setNewTitle(''); setNewWeight(10)
+    const w = Math.min(newWeight, remaining)
+    if (w <= 0) return
+    store.addSubtask(goal.id, { title: newTitle, weight: w })
+    setNewTitle(''); setNewWeight(Math.min(10, Math.max(0, remaining - w)))
   }
 
   return (
@@ -62,6 +66,7 @@ export default function GoalDetail({ goal, store, onBack }) {
             total={timeline.items.length}
             expanded={activeId === item.id}
             onToggleExpand={() => setActiveId(activeId === item.id ? null : item.id)}
+            maxWeight={Math.max(0, 100 - (totalWeight - (item.weight || 0)))}
             onUpdate={(patch) => store.updateSubtask(goal.id, item.id, patch)}
             onDelete={() => store.deleteSubtask(goal.id, item.id)}
             onMove={(dir) => store.moveSubtask(goal.id, item.id, dir)}
@@ -70,10 +75,23 @@ export default function GoalDetail({ goal, store, onBack }) {
         ))}
       </div>
 
-      <form onSubmit={addSubtask} className="card p-4 flex flex-col md:flex-row gap-2">
+      <form onSubmit={addSubtask} className="card p-4 flex flex-col md:flex-row gap-2 md:items-center">
         <input className="input md:flex-1" placeholder="New subtask title..." value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
-        <input className="input md:w-32" type="number" min="0" step="1" value={newWeight} onChange={(e) => setNewWeight(Number(e.target.value) || 0)} placeholder="Weight %" />
-        <button className="btn btn-primary" type="submit">+ Add subtask</button>
+        <input
+          className="input md:w-32"
+          type="number"
+          min="0"
+          max={remaining}
+          step="1"
+          value={newWeight}
+          onChange={(e) => setNewWeight(Math.min(remaining, Math.max(0, Number(e.target.value) || 0)))}
+          placeholder="Weight %"
+          disabled={remaining <= 0}
+        />
+        <span className={`text-xs whitespace-nowrap ${remaining <= 0 ? 'text-rose-400' : 'text-muted'}`}>
+          {remaining <= 0 ? 'Đã đủ 100%' : `Còn ${remaining}%`}
+        </span>
+        <button className="btn btn-primary" type="submit" disabled={remaining <= 0}>+ Add subtask</button>
       </form>
 
       <GoalForm
